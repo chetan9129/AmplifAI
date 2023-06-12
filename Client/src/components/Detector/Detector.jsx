@@ -95,25 +95,25 @@ function Detector() {
           .withFaceLandmarks()
           .withFaceExpressions();
 
-        const resizedDetections = faceapi.resizeResults(
-          detections,
-          displaySize
-        );
-        // console.log(detections[0].expressions)
-        const expressions = detections[0].expressions;
-        const maxExpression = Math.max(...Object.values(expressions));
-        const dominantEmotion = Object.keys(expressions).find(
-          (key) => expressions[key] === maxExpression
-        );
+        if (detections && detections[0] && detections[0].expressions) {
+          const expressions = detections[0].expressions;
+          const maxExpression = Math.max(...Object.values(expressions));
+          const dominantEmotion = Object.keys(expressions).find(
+            (key) => expressions[key] === maxExpression
+          );
 
-        if (dominantEmotion === "surprised") {
-          setEmotions((prev) => ({ ...prev, emotion_type: "surprise" }));
-        } else if (dominantEmotion === "fearful") {
-          setEmotions((prev) => ({ ...prev, emotion_type: "fear" }));
-        } else {
-          setEmotions((prev) => ({ ...prev, emotion_type: dominantEmotion }));
+          if (dominantEmotion === "surprised") {
+            setEmotions((prev) => ({ ...prev, emotion_type: "surprise" }));
+          } else if (dominantEmotion === "fearful") {
+            setEmotions((prev) => ({ ...prev, emotion_type: "fear" }));
+          } else {
+            setEmotions((prev) => ({ ...prev, emotion_type: dominantEmotion }));
+          }
+          setEmotions((prev) => ({
+            ...prev,
+            emotion_dominance: maxExpression,
+          }));
         }
-        setEmotions((prev) => ({ ...prev, emotion_dominance: maxExpression }));
 
         canvasRef &&
           canvasRef.current &&
@@ -134,10 +134,8 @@ function Detector() {
           );
       }
     }, 100);
-    // interval()
 
     setTimeout(() => {
-      // console.log("Hello")
       clearInterval(interval);
       closeWebcam();
       setIsHandleVideoEnded(true);
