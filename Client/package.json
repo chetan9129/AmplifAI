@@ -1,6 +1,6 @@
 {
   "name": "music_player",
-  "proxy": "https://amplif-ai.vercel.app",
+  "proxy": "https://amplif-api.vercel.app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

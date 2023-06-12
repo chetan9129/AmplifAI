@@ -8,23 +8,22 @@ import Player from "../Player/Player";
 import Songs from "./Songs";
 import { currSongContext } from "../../App";
 import { BiTime } from "react-icons/bi";
-import  secureLocalStorage  from  "react-secure-storage";
+import secureLocalStorage from "react-secure-storage";
 import { BsHeart, BsPlayFill } from "react-icons/bs";
-import { UserContext } from '../../App';
+import { UserContext } from "../../App";
 
 function PlaylistInterface() {
   const { id } = useParams();
   const [songs, setSongs] = useState({});
-  const {user,setUser}=useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   const { currSong, setCurrSong, currPlaylist, setCurrPlaylist } =
     useContext(currSongContext);
 
   useEffect(() => {
-
-    const playlist=JSON.parse(secureLocalStorage.getItem("playlists"));
-    Object.keys(playlist).forEach((key)=>{
-      if(playlist[key]._id===id){
+    const playlist = JSON.parse(secureLocalStorage.getItem("playlists"));
+    Object.keys(playlist).forEach((key) => {
+      if (playlist[key]._id === id) {
         setSongs(playlist[key]);
         return;
       }
@@ -45,7 +44,6 @@ function PlaylistInterface() {
   return (
     <>
       <div className="playlist-interface">
-
         {Object.keys(songs).length > 0 ? (
           <div className="playlist-main">
             <div className="playlist-header">

@@ -3,9 +3,10 @@ import "./style.css";
 import { Link } from "react-router-dom";
 import Playlist from "./Playlist";
 import axios from "axios";
-import { encryptData,decryptData } from "../../helper/helper";
-import  secureLocalStorage  from  "react-secure-storage";
+import { encryptData, decryptData } from "../../helper/helper";
+import secureLocalStorage from "react-secure-storage";
 import Loader from "../Loader/loader";
+
 export default function MainHome() {
   const [playlist, setPlaylist] = useState({});
 
@@ -15,8 +16,7 @@ export default function MainHome() {
       .then((res) => {
         setPlaylist(res.data);
         console.log(res.data);
-        secureLocalStorage.setItem("playlists",JSON.stringify(res.data));
-
+        secureLocalStorage.setItem("playlists", JSON.stringify(res.data));
       })
       .catch((err) => {
         console.log(err.message);
@@ -25,18 +25,21 @@ export default function MainHome() {
 
   return (
     <div className="mainhome_wrap">
-      {(playlist=={} || Object.keys(playlist).length==0)?(
-
+      {Object.keys(playlist).length === 0 ? (
         <div className="loader_div">
-            <Loader />
+          <Loader />
         </div>
-      ):(
+      ) : (
         <>
           <div className="mainhome_heading">Recommended Playlists:</div>
-            <div className="mainhome_out">
+          <div className="mainhome_out">
             {Object.keys(playlist).map((key, idx) => {
               const list = playlist[key];
-              if(list!==undefined || list.playlist_songs!==undefined) {
+              if (
+                list !== undefined &&
+                list.playlist_songs !== undefined &&
+                list.playlist_songs.length > 0
+              ) {
                 return (
                   <Link to={`/playlist/${list._id}`} key={key}>
                     <Playlist
@@ -46,11 +49,11 @@ export default function MainHome() {
                   </Link>
                 );
               }
+              return null; // Skip rendering if playlist_songs is undefined or empty
             })}
-            </div>
-      </>
-      )
-    }
+          </div>
+        </>
+      )}
     </div>
   );
 }
